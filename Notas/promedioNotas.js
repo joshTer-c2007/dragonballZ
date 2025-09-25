@@ -22,3 +22,12 @@ calcularPromedioNotas=function(){
     
 
 }
+
+limpiar=function(){
+    mostrarTexto("txtNota1","0");
+    mostrarTexto("txtNota2","0");
+    mostrarTexto("txtNota3","0");
+    mostrarTexto("lblResultado","CALCULANDO...");
+    mostrarTexto("lblPalabras","...");
+    mostrarImagen("img"," ");
+}
