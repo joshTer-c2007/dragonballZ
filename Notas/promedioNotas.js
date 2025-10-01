@@ -12,12 +12,18 @@ calcularPromedioNotas=function(){
 
     mostrarTexto("lblResultado",promedio);
 
-    if(promedio>7){
-        mostrarTexto("lblPalabras","Lo lograste disfruta tus vacaciones");
-        mostrarImagen("img","./imagenes/gogeta.gif");
-    }else{
-        mostrarTexto("lblPalabras","Que paso bro, no le echaste ganas :(");
+    if(promedio < 5 && promedio >0 ){
+        mostrarTexto("lblPalabras","REPROBADO");
         mostrarImagen("img","./imagenes/vegito.gif");
+    }else if(promedio >= 5 && promedio <=8){
+        mostrarTexto("lblPalabras","BUEN TRABAJO");
+        mostrarImagen("img","./imagenes/gogeta.gif");
+    }else if( promedio > 8 && promedio <=10){
+        mostrarTexto("lblPalabras","EXCELENTE");
+        mostrarImagen("img","./imagenes/ssj4.gif");
+    }else{
+        mostrarTexto("lblPalabras","DATOS INCORRECTOS");
+        mostrarImagen("img","./imagenes/super17.gif")
     }
     
 

@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PHQ-9 - Autoevaluación</title>
+  <style>
+    /* estilos simples y accesibles */
+    :root{
+      --bg:#f6f8fb;
+      --card:#ffffff;
+      --accent:#2b6cb0;
+      --danger:#c53030;
+    }
+    body{
+      font-family: Inter, Roboto, Arial, sans-serif;
+      background:var(--bg);
+      margin:0;
+      padding:24px;
+      display:flex;
+      justify-content:center;
+    }
+    .container{
+      width:100%;
+      max-width:820px;
+      background:var(--card);
+      border-radius:10px;
+      box-shadow:0 6px 20px rgba(20,20,40,0.08);
+      padding:24px;
+    }
+    h1{ margin:0 0 8px 0; font-size:1.4rem; color:var(--accent); }
+    p.lead{ margin:0 0 18px 0; color:#333; }
+    .question{ padding:12px; border-bottom:1px solid #eee; display:flex; gap:12px; align-items:center; }
+    .qtext{ flex:1; }
+    .options { display:flex; gap:8px; align-items:center; }
+    label.opt{ display:flex; flex-direction:column; align-items:center; font-size:0.85rem; cursor:pointer; }
+    input[type="radio"]{ margin-top:6px; }
+    .result{
+      margin-top:16px;
+      padding:14px;
+      border-radius:8px;
+      background:#f7fafc;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+    }
+    .severity { font-weight:700; font-size:1.05rem; }
+    .severity.none{ color: #2f855a; }
+    .severity.mild{ color: #b7791f; }
+    .severity.moderate{ color: #dd6b20; }
+    .severity.severe{ color: #c53030; }
+    button { background:var(--accent); color:white; border:none; padding:10px 14px; border-radius:8px; cursor:pointer; }
+    button:disabled{ opacity:0.6; cursor:not-allowed; }
+    .warning { margin-top:12px; padding:12px; border-radius:8px; background:#fff5f5; color:var(--danger); }
+    footer { margin-top:18px; font-size:0.85rem; color:#555; }
+    a.resource { color:var(--accent); text-decoration:underline; }
+  </style>
+</head>
+<body>
+  <main class="container" role="main">
+    <h1>Autoevaluación PHQ-9</h1>
+    <p class="lead">Responde según lo que experimentaste en las últimas 2 semanas. Esto no reemplaza la evaluación profesional.</p>
+
+    <form id="phqForm" aria-label="PHQ-9">
+      <!-- Preguntas (1 a 9) -->
+      <div id="questions"></div>
+
+      <div class="result" aria-live="polite">
+        <div>
+          <div>Puntuación total: <strong id="score">0</strong> / 27</div>
+          <div>Severidad: <span id="severity" class="severity none">Ninguna</span></div>
+        </div>
+        <div>
+          <button id="sendBtn" type="button">Enviar resultado</button>
+        </div>
+      </div>
+
+      <div id="suicideWarning" class="warning" style="display:none;">
+        <strong>Advertencia:</strong> Respondiste afirmativamente a la pregunta sobre pensamientos suicidas.
+        Si tienes riesgo inmediato, busca ayuda local urgente (número de emergencias) o contacta una línea de crisis inmediatamente.
+        <div style="margin-top:8px;">
+          Recursos: <a class="resource" href="https://www.opencounseling.com/suicide-hotlines" target="_blank" rel="noopener">Líneas de ayuda por país</a>
+        </div>
+      </div>
+
+      <footer>
+        <p><strong>Privacidad:</strong> Este test es autoaplicado — si lo envías a un servidor asegúrate de usar HTTPS y manejo seguro de datos.</p>
+      </footer>
+    </form>
+  </main>
+
+  <script>
+    // Preguntas estándar PHQ-9 (texto corto)
+    const questionsText = [
+      "Poco interés o placer en hacer las cosas",
+      "Sentirse deprimido/a, triste o sin esperanza",
+      "Dificultad para conciliar el sueño o dormir más de lo habitual",
+      "Sentirse cansado/a o con poca energía",
+      "Pérdida de apetito o comer en exceso",
+      "Sentirse mal contigo mismo/a — o que has fallado, o que eres un fracaso",
+      "Dificultad para concentrarte en cosas (leer, ver la TV, etc.)",
+      "Moverte o hablar tan despacio que otras personas lo notan — o al contrario, estar tan inquieto/a que te mueves mucho",
+      "Pensamientos de que estarías mejor muerto/a o de hacerte daño de alguna manera"
+    ];
+
+    const questionsDiv = document.getElementById('questions');
+
+    // Crear UI de preguntas (radio 0 a 3)
+    questionsText.forEach((q, i) => {
+      const idx = i + 1;
+      const wrapper = document.createElement('div');
+      wrapper.className = 'question';
+      wrapper.innerHTML = `
+        <div class="qtext"><strong>${idx}.</strong> ${q}</div>
+        <div class="options" role="radiogroup" aria-label="Opciones pregunta ${idx}">
+          <label class="opt">0<br><input type="radio" name="q${idx}" value="0" checked></label>
+          <label class="opt">1<br><input type="radio" name="q${idx}" value="1"></label>
+          <label class="opt">2<br><input type="radio" name="q${idx}" value="2"></label>
+          <label class="opt">3<br><input type="radio" name="q${idx}" value="3"></label>
+        </div>
+      `;
+      questionsDiv.appendChild(wrapper);
+    });
+
+    // Elementos de UI
+    const scoreEl = document.getElementById('score');
+    const severityEl = document.getElementById('severity');
+    const sendBtn = document.getElementById('sendBtn');
+    const suicideWarning = document.getElementById('suicideWarning');
+
+    // Calcular puntaje: suma de respuestas
+    function calcularPuntaje(){
+      let total = 0;
+      for(let i=1;i<=9;i++){
+        const radios = document.getElementsByName('q'+i);
+        for(const r of radios){
+          if(r.checked) { total += Number(r.value); break; }
+        }
+      }
+      return total;
+    }
+
+    // Interpretar
+    function interpretar(total){
+      if(total <= 4) return {text:'Ninguna o mínima', cls:'none'};
+      if(total <= 9) return {text:'Leve', cls:'mild'};
+      if(total <= 14) return {text:'Moderada', cls:'moderate'};
+      if(total <= 19) return {text:'Moderadamente grave', cls:'severe'};
+      return {text:'Grave', cls:'severe'};
+    }
+
+    // Verificar si pregunta 9 > 0 (riesgo suicida)
+    function tieneRiesgoSuicida(){
+      const radios = document.getElementsByName('q9');
+      for(const r of radios) if(r.checked && Number(r.value) > 0) return true;
+      return false;
+    }
+
+    // Actualizar UI al cambio
+    document.getElementById('phqForm').addEventListener('change', () => {
+      const total = calcularPuntaje();
+      scoreEl.textContent = total.toString();
+      const ip = interpretar(total);
+      severityEl.textContent = ip.text;
+      severityEl.className = 'severity ' + ip.cls;
+
+      suicideWarning.style.display = tieneRiesgoSuicida() ? 'block' : 'none';
+    });
+
+    // Inicializar valores
+    document.getElementById('phqForm').dispatchEvent(new Event('change'));
+
+    // Simular envío: si quieres integrar con backend, cambia URL
+    sendBtn.addEventListener('click', async () => {
+      const total = calcularPuntaje();
+      const payload = {
+        score: total,
+        severity: interpretar(total).text,
+        answers: Array.from({length:9}, (_,i)=>{
+          const radios = document.getElementsByName('q'+(i+1));
+          for(const r of radios) if(r.checked) return Number(r.value);
+        })
+      };
+
+      // ejemplo: POST a /api/phq9 (modifica si usas backend Java)
+      try {
+        // Si no tienes backend, quitá el fetch y solo muestra el resultado
+        const resp = await fetch('/api/phq9', {
+          method:'POST',
+          headers:{ 'Content-Type':'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if(resp.ok){
+          alert('Resultado enviado correctamente al servidor.');
+        } else {
+          // si no hay servidor, mostramos localmente
+          alert('No se pudo enviar al servidor. Mostrando resultado localmente:\nPuntaje: '+payload.score+' - '+payload.severity);
+        }
+      } catch(err){
+        alert('No se encontró servidor. Resultado local:\nPuntaje: '+payload.score+' - '+payload.severity);
+      }
+    });
+  </script>
+</body>
+</html>
