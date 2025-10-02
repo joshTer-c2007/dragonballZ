@@ -1,0 +1,66 @@
+/* puntoDeVentas.css (CSS del ejercicio de notas con ajustes menores) */
+
+body{
+    background-color: black;
+    background-size: cover;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.principal{
+    display: flex;
+    /* Ajustado para un gris más parecido a la imagen */
+    background-color: rgba(220, 220, 220, 1); 
+    margin-left: 0px;
+    margin-right:0px;
+    /* Distribución: Logo | Contenido | Resultados */
+    flex-direction: row; 
+    margin-top: 100px;
+}
+.titulo{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 20px;
+    font-size: 30px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.logoEscuela{
+    display: flex;
+    flex: 1.5; /* Le da un poco más de espacio al logo */
+    justify-content: center;
+    align-items: center;
+}
+.contenido{
+    display: flex;
+    flex: 2; /* Espacio para los inputs y el título */
+    flex-direction: column;
+    padding: 20px;
+}
+.areaResultado{
+    /* Esto hace que todos los resultados se apilen en una columna a la derecha */
+    display: flex;
+    flex: 1.5; /* Le da el mismo espacio que al logo */
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start; /* Alinea los bloques de resultado a la izquierda dentro de esta columna */
+    padding-right: 20px;
+}
+/* ... (el resto de las clases como .imagen, .estiloBoton, .cajaTexto, etc., se mantienen iguales) ... */
+
+/* Ajuste específico para que el texto y el valor se muestren lado a lado y alineados en la derecha */
+.resultado{
+    display: flex;
+    width: 100%; /* Ocupa el ancho de su contenedor */
+    /* Alinea el par texto/valor a la derecha */
+    justify-content: flex-end; 
+    
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 10px; /* Reducción de margen para que se vean más juntos */
+}
+.resultado > div:first-child {
+    /* Mantiene el texto (SUBTOTAL:, etc.) a la izquierda del valor */
+    margin-right: 5px; 
+    font-weight: bold;
+}
