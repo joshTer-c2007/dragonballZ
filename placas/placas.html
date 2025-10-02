@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Validación de Placas Vehiculares</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="utilitarios.js"></script>
+    <script src="placas.js"></script>
+</head>
+<body>
+    <div class="contenedor">
+        <h1>🚗 Validación de Placas Vehiculares</h1>
+
+        <div class="formulario">
+            <label for="txtPlaca">Ingrese la placa:</label>
+            <input type="text" id="txtPlaca" maxlength="8" placeholder="Ej: ABC-1234">
+            <button onclick="validarPlaca()">Validar</button>
+        </div>
+
+        <div class="resultados">
+            <p id="resultado"></p>
+            <p id="provincia"></p>
+            <p id="tipoVehiculo"></p>
+        </div>
+    </div>
+    <img src=" " id="imgResultado"/>
+</body>
+</html>
