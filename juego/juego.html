@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>JUEGA PIEDRA PAPEL O TIJERA</title>
+  <link rel="stylesheet" href="juego.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>JUEGA PIEDRA PAPEL O TIJERA</h1>
+
+    <div id="marcadores" class="scoreboard">
+      <div class="score">Usuario: <span id="puntosUsuario">0</span></div>
+      <div class="score">Computador: <span id="puntosComputador">0</span></div>
+    </div>
+
+    <section class="instructions">
+      <p>Selecciona una imagen para jugar. El primero que llegue a 5 puntos gana el juego.</p>
+    </section>
+
+    <section class="choices">
+      <div class="choice">
+        <img src="imagenes/piedra.png" alt="piedra" id="imgPiedra" onclick="jugar('piedra')" />
+        <div class="label">Piedra</div>
+      </div>
+      <div class="choice">
+        <img src="imagenes/papel.png" alt="papel" id="imgPapel" onclick="jugar('papel')" />
+        <div class="label">Papel</div>
+      </div>
+      <div class="choice">
+        <img src="imagenes/tijera.png" alt="tijera" id="imgTijera" onclick="jugar('tijera')" />
+        <div class="label">Tijera</div>
+      </div>
+    </section>
+
+    <section class="results">
+      <div class="player-box">
+        <h3>TU ELECCIÓN</h3>
+        <img id="imagenUsuario" src="imagenes/piedra.png" alt="tu eleccion" />
+      </div>
+
+      <div class="center-panel">
+        <p id="resultadoTexto">Selecciona una opción para jugar</p>
+        <button id="btnNueva" onclick="nuevaPartida()">NUEVA PARTIDA</button>
+      </div>
+
+      <div class="player-box">
+        <h3>COMPUTADOR</h3>
+        <img id="imagenComputador" src="imagenes/piedra.png" alt="computador" />
+      </div>
+    </section>
+  </div>
+
+  <script src="serviciosJuego.js"></script>
+  <script src="utilitarios.js"></script>
+  <script src="juego.js"></script>
+</body>
+</html>
