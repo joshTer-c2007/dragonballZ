@@ -40,3 +40,32 @@ invertirCadena=function(cadena){
     }
     return resultado;
 }
+
+buscarLetra=function(cadena,letra){
+    let busqueda;
+    let existeLetra=false;
+    for(let i=0;i<cadena.length;i++){
+        busqueda=cadena.charAt(i);
+        if(busqueda==letra){
+            existeLetra=true;
+        }
+    }
+    if(existeLetra==true){
+        return true;
+    }else{
+        return false;
+    }
+
+}
+
+contarMayusculas=function(cadena){
+    let letra;
+    let contadorMayusculas;
+    for(let i=0;i<cadena.length;i++){
+        letra=cadena.charAt(i);
+        if(esMayuscula(letra)){
+            contadorMayusculas=contadorMayusculas+1;
+        }
+    }
+    console.log(contadorMayusculas);
+}
