@@ -83,6 +83,7 @@ agergarEmpleado = function (empleado) {
 }
 
 guardarCambios = function () {
+    let cambios;
     let hayErrores = false;
     let digitos = recuperarTexto("txtCedula");
     if (digitos <= 10) {
@@ -112,17 +113,63 @@ guardarCambios = function () {
     } else {
         mostrarTexto("lblErrorSueldo", " ");
     }
-    let empleadoNuevo = {};
-    empleadoNuevo.cedula = digitos;
-    empleadoNuevo.nombre = nombreMayus;
-    empleadoNuevo.apellido = apellidoMayus;
-    empleadoNuevo.sueldo = sueldoEmpleado;
-    agergarEmpleado(empleadoNuevo);
-    if(agergarEmpleado){
+
+    if (esNuevo == true) {
+        let empleadoNuevo = {};
+        empleadoNuevo.cedula = digitos;
+        empleadoNuevo.nombre = nombreMayus;
+        empleadoNuevo.apellido = apellidoMayus;
+        empleadoNuevo.sueldo = sueldoEmpleado;
+        agergarEmpleado(empleadoNuevo);
+    } else {
+        return false;
+    }
+
+    if (agergarEmpleado) {
         alert("EMPLEADO GUARDADO CORRECTAMENTE, BIENVENIDO");
-    }else{
-        alert("YA XISTE UN EMPLEADO CON ESTA CEDULA",empleados.cedula);
+    } else {
+        alert("YA XISTE UN EMPLEADO CON ESTA CEDULA", empleados.cedula);
     }
     mostrarEmpleados();
+    cambios = buscarEmpleado(datosEmpleados);
+    let datosEmpleados = {
+        cedula: "1750771435",
+        nombre: "Carmen",
+        apellido: "Toasa",
+        sueldo: "800.0"
+    }
+    if (cambios) {
+        alert("EMPLEO GUARDADO CORRECTAMENTE");
+        esNuevo = false;
+        mostrarEmpleados();
+    } else {
+        alert("YA EXISTE UN EMPLEADO CON LA CEDULA", empleados.cedula);
+    }
+    deshabilitarComponente("txtCedula");
+    deshabilitarComponente("txtNombre");
+    deshabilitarComponente("txtApellido");
+    deshabilitarComponente("txtSueldo");
+}
+
+ejecutarBusqueda = function () {
+    let digitos = recuperarTexto("txtBusquedaCedula");
+    let respuesta = buscarEmpleado(digitos);
+    if (respuesta == null) {
+        alert("cliente no encontrado");
+    } else {
+        mostrarTextoEnCaja("txtCedula", respuesta.cedula);
+        habilitarComponente("txtNombre");
+        habilitarComponente("txtApellido");
+        habilitarComponente("txtSueldo");
+        deshabilitarComponente("txtCedula");
+    }
 
 }
+
+limpiar=function(){
+    mostrarTexto("txtCedula"," ");
+    mostrarTexto("txtNombre"," ");
+    mostrarTexto("txtApellido"," ");
+    mostrarTexto("txtSueldo"," 0.0");
+}
+
