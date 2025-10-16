@@ -1,4 +1,5 @@
 let esNuevo = false;
+let roles=[];
 
 let empleados = [
     { cedula: "1714616123", nombre: "John", apellido: "Cena", sueldo: 500.0 },
@@ -17,6 +18,7 @@ mostrarOpcionRol = function () {
     mostrarComponente("divRol");
     ocultarComponente("divEmpleado");
     ocultarComponente("divResumen");
+    mostrarRoles();
 }
 
 mostrarOpcionResumen = function () {
@@ -225,4 +227,89 @@ calcularRol=function(){
 
     let valorAPagar=calcularValorAPagar(sueldo,aporteIESS,descuentos);
     mostrarComponente("txtDescuentos",valorAPagar);
+}
+buscarRol=function(cedula){
+    return roles.find(rol=>rol.cedula)||null;
+}
+
+agregarRol=function(rol){
+    if(buscarRol(rol.cedula)){
+        alert("ERROR: Ya existe un rol registrado para la cedula"+rol.cedula);
+        console.error("Fallo al agregar: Cedula ya existe",rol);
+        return;
+    }
+
+    roles.push(rol);
+    alert("Rol guardado exitosamente");
+    deshabilitarComponente("btnGuardar");
+    console.log("Rol agregado",rol);
+}
+
+calcularAporteEmpleado=function(sueldo){
+    //11.15% = 0.1115
+    let porcentajeAporte=0.1115;
+    let aporte= sueldo*porcentajeAporte;
+
+    return parseFloat(aporte.toFixed(2));
+}
+
+guardarRol=function(){
+    let valorAPagar=recuperarFloat("infoPago");
+    let aporteEmpleado=recuperarFloat("infoAporteEmpleado");
+    let nombre=recuperarTexto("infoNombre");
+    let cedula=recuperarTexto("infoCedula");
+    let sueldo=recuperarTexto("infoSueldo");
+
+    let aporteEmpleador=calcularAporteEmpleado(sueldo);
+    let nuevoRol={}
+    nuevoRol.cedula=cedula;
+    nuevoRol.nombre=nombre;
+    nuevoRol.sueldo=sueldo;
+    nuevoRol.valorAPagar=valorAPagar;
+    nuevoRol.aporteEmpleado=aporteEmpleado;
+    nuevoRol.aporteEmpleado=aporteEmpleador;
+    agregarRol(nuevoRol);
+
+    deshabilitarComponente("btnGuardar");
+    console.log("Arreglo roles actual:"+roles);
+}
+
+mostrarRoles=function(){
+    let tablaResumen=document.getElementById("tablaResumen");
+    let contenidoTabla = "<table><tr>" +
+        "<th>CEDULA</th>" +
+        "<th>NOMBRE</th>" +
+        "<th>VALOR A PAGAR</th>" +
+        "<th>APORTE EMPLEADO</th>" +
+        "<th>APORTE EMPLEADOR</th>" +
+        "</tr>";
+    let elementoRol;
+    for (let i = 0; i < roles.length; i++) {
+        elementoRol = rol[i];
+        contenidoTabla +=
+            "<tr><td>" + elementoRol.cedula + "</td>" +
+            "<td>" + elementoRol.nombre + "</td>" +
+            "<td>" + elementoRol.valorAPagar + "</td>" +
+            "<td>" + elementoRol.aporteEmpleado + "</td>" +
+            "<td>" + elementoRol.aporteEmpleador + "</td>" +
+            "</tr>"
+    }
+    contenidoTabla += "</table>";
+    tablaResumen.innerHTML = contenidoTabla;
+}
+mostrarTotales=function(){
+    let totalEmpleado=0;
+    let totalEmpleador=0;
+    let totalAPagar=0;
+    for(i=0;i.roles;i++){
+        totalEmpleado+=rol.aporteEmpleado;
+        totalEmpleador+=rol.aporteEmpleador;
+        totalAPagar+=rol.valorAPagar
+    }
+    let totalNomina=totalEmpleado+totalEmpleador+totalAPagar;
+    mostrarComponente("infoTotalPago",totalEmpleado);
+    mostrarComponente("infoAporteEmpresa",totalEmpleador);
+    mostrarComponente("infoAporteEmpleado",totalAPagar);
+
+    mostrarComponente("infoPago",totalNomina);
 }
