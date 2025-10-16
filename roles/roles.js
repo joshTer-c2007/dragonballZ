@@ -173,3 +173,56 @@ limpiar=function(){
     mostrarTexto("txtSueldo"," 0.0");
 }
 
+buscarPorRol=function(){
+    let rol=recuperarTexto("divRol");
+    if(!rol){
+        alert("Por favor, ingrese un valor de Rol para buscar");
+        return;
+    }
+    let empleado=buscarEmpleado(rol);
+    if(empleado){
+        let nombreCompleto=empleado.nombre+" "+empleado.apellido;
+        mostrarComponente(empleado.cedula,empleado.sueldo,nombreCompleto);
+        console.log("EMPLEADO ENCONTRADO:"+nombreCompleto+"CEDULA:"+empleado.cedula);    
+    }else{
+        alert("ERROR: El empleado con el Rol Ingresado no existe");
+    }
+}
+
+calcularAporteEmpleado=function(sueldo){
+    //9.45% = 0.0945
+    let porcentajeAporte=0.0945;
+    let aporte=sueldo*porcentajeAporte;
+    return parseFloat(aporte.toFixed(2));
+}
+
+calcularValorAPagar=function(sueldo,aporteIess,descuento){
+    let valorAPagar=sueldo-aporteIess-descuento;
+    return parseFloat(valorAPagar.toFixed(2));
+}
+
+calcularRol=function(){
+    let sueldo=recuperarFloat("infoSueldo");
+    let descuentos=recuperarFloat("txtDescuentos");
+    if(isNaN(sueldo)||sueldo<=0){
+        alert("ERROR: El sueldo no es valido o no ha sido recargado");
+        return;
+    }
+    if(isNaN(descuentos)){
+        alert("ERROR: El valor de los descuentos no puede ser negativo");
+        return;
+    }
+    if(descuentos<0){
+        alert("ERROR: los descuentos no pueden ser negativos");
+        return;
+    }
+    if(descuentos>sueldo){
+        alert("ERROR: los descuentos"+descuentos.toFixed(2)+"no pueden ser mayores al sueldo"+sueldo.toFixed(2));
+    }
+
+    let aporteIESS=calcularAporteEmpleado(sueldo);
+    mostrarComponente("infoSueldo",aporteIESS);
+
+    let valorAPagar=calcularValorAPagar(sueldo,aporteIESS,descuentos);
+    mostrarComponente("txtDescuentos",valorAPagar);
+}
